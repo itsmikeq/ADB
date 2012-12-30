@@ -24,7 +24,7 @@ module ADB
 
     private
     def with(args)
-      shell *"am instrument #{args.strip}"
+      shell "am instrument #{args.strip}"
     end
 
     def using_the(runner)

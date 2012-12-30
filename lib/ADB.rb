@@ -19,8 +19,8 @@ module ADB
   # @param timeout value for the command to complete.  Defaults to 30
   # seconds.
   #
-  def start_server(timeout=30)
-    execute_adb_with(timeout, 'start-server')
+  def start_server(timeout=30,args="")
+    execute_adb_with(timeout, "start-server #{args}")
     raise ADBError, "Server didn't start#{stdout_stderr_message}" unless stdout_contains "daemon started successfully"
   end
 
@@ -122,9 +122,21 @@ module ADB
   # seconds.
   #
   def shell(command, target={}, timeout=30)
-    execute_adb_with(timeout, "#{which_one(target)} wait-for-device shell #{command}")
+    # execute_adb_with(timeout, "#{which_one(target)} wait-for-device shell #{command}")
+    output = `adb shell "#{command}"`
   end
-
+  
+  #
+  # execute logcat
+  #
+  # @param [Integer] timeout
+  # 
+  #
+  def logcat(timeout=3)
+    output = `adb logcat -d`
+    return output
+    # return "#{@last_stdout} #{@last_stderr}"
+  end
   #
   # format a date for adb shell date command
   #
@@ -201,7 +213,7 @@ module ADB
   def root(target={}, timeout=30)
     execute_adb_with(timeout, "#{which_one(target)} root")
   end
-
+  
   private
 
   def stdout_stderr_message
